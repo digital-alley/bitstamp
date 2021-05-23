@@ -1,0 +1,5 @@
+requests==2.7.0
+websocket-client==1.0.1
+pytest==6.2.4
+mock==4.0.3
+

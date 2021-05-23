@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  bitstamp:
+    build: .
+    volumes:
+      - .:/code
+    tty: true

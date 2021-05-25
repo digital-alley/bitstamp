@@ -54,10 +54,7 @@ class APIV2Client:
         """
         Retrieves current BUY/SELL conversion rate for EUR/USD.
         """
-        
         rsp = requests.get(url=self.base_endpoint + '/eur_usd/')
-        if rsp.status_code == 404:
-            raise ValueError('Conversion rates for EUR/USD not found.')
         
         return rsp.json()
     

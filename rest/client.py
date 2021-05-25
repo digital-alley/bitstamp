@@ -53,6 +53,12 @@ class APIV2Client:
         params = {'time': period}
         return self._make_request('GET', '/transactions/' + currency_pair, params)
 
+    def conversion_rate(self):
+        """
+        Retrieves current BUY/SELL conversion rate for EUR/USD.
+        """
+        return self._make_request('GET', '/eur_usd/')
+
     def _make_request(self, method: str, endpoint: str, params: typing.Dict = None, body: typing.Dict = None):
         """
         Private function for all different HTTP request methods using request library.
@@ -70,12 +76,3 @@ class APIV2Client:
                                  endpoint, e)
 
         return rsp.json()
-
-    def conversion_rate(self):
-        """
-        Retrieves current BUY/SELL conversion rate for EUR/USD.
-        """
-        rsp = requests.get(url=self.base_endpoint + '/eur_usd/')
-        
-        return rsp.json()
-    

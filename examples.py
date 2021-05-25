@@ -14,3 +14,7 @@ print(rsp)
 print('[*] Calling hourli ticker endpoint for BTC/USD currency pair:')
 rsp = client.ticker('btcusd')
 print(rsp)
+
+print('[*] Calling EUR/USD conversion rate endpoint:')
+rsp = client.conversion_rate()
+print(rsp)

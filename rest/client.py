@@ -49,3 +49,12 @@ class APIV2Client:
             raise ValueError('Order book for requested currency pair not found.')
 
         return rsp.json()
+
+    def conversion_rate(self):
+        """
+        Retrieves current BUY/SELL conversion rate for EUR/USD.
+        """
+        rsp = requests.get(url=self.base_endpoint + '/eur_usd/')
+        
+        return rsp.json()
+    

@@ -21,4 +21,4 @@ print(rsp)
 
 print('[*] Calling EUR/USD conversion rate endpoint:')
 rsp = client.conversion_rate()
-print(rsp)
+print('buy: {buy}, sell: {sell}'.format(buy=rsp.buy, sell=rsp.sell))

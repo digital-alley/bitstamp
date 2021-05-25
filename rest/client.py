@@ -2,6 +2,8 @@ import typing
 
 import requests
 
+from . import models
+
 
 class APIV2Client:
     _BASE_ENDPOINT: str = 'https://www.bitstamp.net/api/v2'
@@ -59,11 +61,12 @@ class APIV2Client:
         params = {'time': period}
         return self._make_request(self._HTTP_GET, '/transactions/' + currency_pair, params)
 
-    def conversion_rate(self):
+    def conversion_rate(self) -> models.ConversionRate:
         """
         Retrieves current BUY/SELL conversion rate for EUR/USD.
         """
-        return self._make_request(self._HTTP_GET, '/eur_usd/')
+        rsp = self._make_request(self._HTTP_GET, '/eur_usd/')
+        return models.ConversionRate(rsp)
 
     @classmethod
     def _make_request(cls, method: str, endpoint: str, params: typing.Dict = None, body: typing.Dict = None,
@@ -87,7 +90,7 @@ class APIV2Client:
             if rsp is None:
                 raise Exception('Unknown HTTP method')
 
-            return rsp.json()
+            return rsp
 
         except Exception as e:
             raise ValueError('Connection error while making request %s: with endpoint: %s, error: %s', method,

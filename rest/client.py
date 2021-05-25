@@ -60,3 +60,4 @@ class APIV2Client:
             raise ValueError('Conversion rates for EUR/USD not found.')
         
         return rsp.json()
+    

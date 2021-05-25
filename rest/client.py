@@ -66,7 +66,8 @@ class APIV2Client:
         return self._make_request(self._HTTP_GET, '/eur_usd/')
 
     @classmethod
-    def _make_request(cls, method: str, endpoint: str, params: typing.Dict = None, body: typing.Dict = None):
+    def _make_request(cls, method: str, endpoint: str, params: typing.Dict = None, body: typing.Dict = None,
+                      headers: typing.Dict = None):
         """
         Private function for all different HTTP request methods using request library.
 
@@ -74,6 +75,7 @@ class APIV2Client:
         :param endpoint: specific endpoint for for api endpoints.
         :param params: additional parameters
         :param body: Body of the request
+        :param headers: headers of the request.
         :return: json value of response.
         """
         try:

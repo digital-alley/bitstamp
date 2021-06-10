@@ -1,3 +1,7 @@
+import hashlib
+import hmac
+import time
+import uuid
 import typing
 
 import requests
@@ -13,8 +17,14 @@ class APIV2Client:
     _HTTP_PATCH: str = 'PATCH'
     _HTTP_PUT: str = 'PUT'
 
-    def __init__(self, client_id: str = None, api_key: str = None, api_secret: str = None):
-        pass
+    _client_id: str
+    _api_key: str
+    _api_secret: typing.Union[bytes, bytearray]
+
+    def __init__(self, client_id: str = None, api_key: str = None, api_secret: typing.Union[bytes, bytearray] = None):
+        self._client_id = client_id
+        self._api_key = api_key
+        self._api_secret = api_secret
 
     def ticker(self, currency_pair: str) -> str:
         """
@@ -91,7 +101,41 @@ class APIV2Client:
                 raise Exception('Unknown HTTP method')
 
             return rsp
-
+         
         except Exception as e:
             raise ValueError('Connection error while making request %s: with endpoint: %s, error: %s', method,
                              endpoint, e)
+
+    def _get_auth_headers(self, api_endpoint: str, body: str, method: str, content_type: str = None) -> typing.Dict:
+        """
+        Creates and returns headers for authorized requests.
+        :param api_endpoint: which API endpoint to create headers and signature for
+        :param body: string payload of the request
+        :param method: http verb for request (GET, POST , ...)
+        :param content_type: content type
+        :return: Dictionary with AUTH headers.
+        """
+        if not (self._api_key and self._api_secret and self._client_id):
+            raise ValueError('ApiKey, ApiSecret and ClientId all need to be provided in order to authenticate')
+
+        current_milli_timestamp = str(round(time.time() * 1000))
+        nonce = str(uuid.uuid4())
+        message = 'BITSTAMP {api_key}{method}www.bitstamp.net{api_endpoint}{content_type}{nonce}{timestamp}v2{body}'
+        message = message.format(
+            api_key=self._api_key, method=method, api_endpoint=api_endpoint, content_type=content_type,
+            nonce=nonce, timestamp=current_milli_timestamp, body=body
+        )
+        message = message.encode('utf-8')
+        signature = hmac.new(self._api_secret, msg=message, digestmod=hashlib.sha256).hexdigest()
+
+        headers = {
+            'X-Auth': 'BITSTAMP {0}'.format(self._api_key),
+            'X-Auth-Signature': signature,
+            'X-Auth-Nonce': nonce,
+            'X-Auth-Timestamp': str(current_milli_timestamp),
+            'X-Auth-Version': 'v2'
+        }
+        if content_type is not None:
+            headers['Content-Type'] = content_type
+
+        return headers

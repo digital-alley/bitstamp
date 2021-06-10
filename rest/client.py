@@ -26,21 +26,27 @@ class APIV2Client:
         self._api_key = api_key
         self._api_secret = api_secret
 
-    def ticker(self, currency_pair: str) -> str:
+    def ticker(self, currency_pair: str) -> models.Ticker:
         """
         Executes an HTTP request calling latest ticker info.
         :param currency_pair: defines which currency pair to get ticker for.
         """
-        return self._make_request(self._HTTP_GET, '/ticker/' + currency_pair)
+        rsp = self._make_request(self._HTTP_GET, '/ticker/' + currency_pair)
+        serialized = models.rsp_to_dict(rsp)
 
-    def hourly_ticker(self, currency_pair: str) -> str:
+        return models.Ticker(serialized)
+
+    def hourly_ticker(self, currency_pair: str) -> models.Ticker:
         """
         Executes an HTTP request calling hourly ticker info.
         :param currency_pair: defines which currency pair to get hourly ticker for.
         """
-        return self._make_request(self._HTTP_GET, '/ticker_hour/' + currency_pair)
+        rsp = self._make_request(self._HTTP_GET, '/ticker_hour/' + currency_pair)
+        serialized = models.rsp_to_dict(rsp)
 
-    def order_book(self, currency_pair: str, group: int = 1):
+        return models.Ticker(serialized)
+
+    def order_book(self, currency_pair: str, group: int = 1) -> models.OrderBook:
         """
         Retrieves current order book snapshot for specified currency pair. It also supports 3 states of
         order grouping.
@@ -55,9 +61,12 @@ class APIV2Client:
             raise ValueError('Group parameter should be 0, 1 or 2.')
 
         params = {'group': group}
-        return self._make_request(self._HTTP_GET, '/order_book/' + currency_pair, params)
+        rsp = self._make_request(self._HTTP_GET, '/order_book/' + currency_pair, params)
+        serialized = models.rsp_to_dict(rsp)
 
-    def transactions(self, currency_pair: str, period: str = 'hour'):
+        return models.OrderBook(serialized)
+
+    def transactions(self, currency_pair: str, period: str = 'hour') -> typing.List[models.Transaction]:
         """
         Returns descending list of transactions for specified currency pair. Supports time interval from which we want the transactions
         to be returned.
@@ -69,7 +78,13 @@ class APIV2Client:
         day - returns transactions for the day.
         """
         params = {'time': period}
-        return self._make_request(self._HTTP_GET, '/transactions/' + currency_pair, params)
+        rsp = self._make_request(self._HTTP_GET, '/transactions/' + currency_pair, params)
+        serialized = models.rsp_to_dict(rsp)
+        transactions = []
+        for s in serialized:
+            transactions.append(models.Transaction(s))
+
+        return transactions
 
     def conversion_rate(self) -> models.ConversionRate:
         """

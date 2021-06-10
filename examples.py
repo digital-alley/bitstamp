@@ -11,6 +11,14 @@ print('[*] Calling ticker endpoint for BTC/USD currency pair:')
 rsp = client.ticker('btcusd')
 print(rsp)
 
-print('[*] Calling hourli ticker endpoint for BTC/USD currency pair:')
-rsp = client.ticker('btcusd')
+print('[*] Calling hourly ticker endpoint for BTC/USD currency pair:')
+rsp = client.ticker('btceur')
 print(rsp)
+
+print('[*] Calling transactions in the last minute endpoint for BTC/USD currency pair:')
+rsp = client.transactions('btcusd', period='minute')
+print(rsp)
+
+print('[*] Calling EUR/USD conversion rate endpoint:')
+rsp = client.conversion_rate()
+print('buy: {buy}, sell: {sell}'.format(buy=rsp.buy, sell=rsp.sell))

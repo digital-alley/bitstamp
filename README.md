@@ -35,5 +35,11 @@ docker-compose exec bitstamp bash
 is going to provide you a shell with your environment (and build a docker image if it doesn't yet exist on your machine).
 We suggest using docker for development.
 
+### Settings
+In order for your authorized requests to pass, you will need to copy `settings_example.py` to `settings.py`
+and provide your account data (api_key, api_secret and client_id). In order to get this data, you'll need to log in
+to your Bitstamp account, go to settings, and generate & confirm your api key.
+
 ## Usage
 Examples for how to use clients defined in the projects can be found inside: `examples.py`
+

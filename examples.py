@@ -1,7 +1,12 @@
 import rest
+import settings
 
 print('[*] Lets first construct a rest API client.')
-client = rest.APIV2Client()
+client = rest.APIV2Client(
+    client_id=settings.CLIENT_ID,
+    api_key=settings.API_KEY,
+    api_secret=settings.API_SECRET
+)
 
 print('[*] Calling ticker endpoint for BTC/USD currency pair:')
 rsp = client.ticker('btcusd')
@@ -54,6 +59,11 @@ for r in rsp:
                                                                                             price=r.price
                                                                                             ))
 
-print('[*] Calling EUR/USD conversion rate endpoint:')
-rsp = client.conversion_rate()
-print('buy: {buy}, sell: {sell}'.format(buy=rsp.buy, sell=rsp.sell))
+print('[*] === AUTHORIZED REQUESTS: You need to provide your accout details (api_key, api_secret, client_id) ===')
+print('[*] Calling get balances for BTC/EUR')
+rsp = client.balances()
+print('EUR balance:', rsp.get('eur_balance'), ' BTC balance:', rsp.get('btc_balance'))
+
+print('[*] Calling get order_status')
+rsp = client.order_status(123456)
+print(rsp)

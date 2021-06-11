@@ -36,4 +36,4 @@ is going to provide you a shell with your environment (and build a docker image 
 We suggest using docker for development.
 
 ## Usage
-Examples for how to use clients defined in the projects can be found inside: `examples.py`
+Examples for how to use clients defined in the projects can be found inside: `examples.py` and `examples_ws.py`

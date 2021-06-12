@@ -132,3 +132,6 @@ dmypy.json
 # IDE configurations
 /.idea/
 /.vscode/
+
+# Settings
+settings.py
